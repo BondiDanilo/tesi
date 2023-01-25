@@ -1,0 +1,4 @@
+# For maps data such as political, cultural borders etc
+https://www.naturalearthdata.com/
+https://github.com/nvkelso/natural-earth-vector
+

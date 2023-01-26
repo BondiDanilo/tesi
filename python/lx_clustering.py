@@ -15,9 +15,11 @@ import cartopy.feature as cfeat
 # Read CSV format files
 import pandas as pd
 
+from scipy.spatial import ConvexHull, convex_hull_plot_2d
+
 from sklearn.cluster import KMeans
 # In[]: Import data
-n_points = 10000
+n_points = 1+100
 
 file_path = "../data/lx_data_20200711.csv"
 dataset = pd.read_csv(file_path)
@@ -30,18 +32,40 @@ lx_data = pd.DataFrame(data=dataset[1:n_points], columns=["latitude","longitude"
 lon = lx_data["longitude"]
 lat = lx_data["latitude"]
 
-# In[ ]:Cluster
-X = np.array([lon,lat])
-X.reshape(n_points-1,2)
-X = np.transpose(X)
+# In[ ]: KMeans Clustering
+X = np.column_stack([lon,lat])
 
 n_clusters = 10
 
-kmeans=KMeans(n_clusters=n_clusters).fit(X)
+kmeans = KMeans(n_clusters=n_clusters).fit(X)
 centroids = kmeans.cluster_centers_
+labels = kmeans.labels_
 
+Y = np.column_stack([lat, lon, labels])
+cluster_data = pd.DataFrame(data=Y,columns=["longitude","latitude","label"])
 
-## In[]: Plot map
+# In[] Plot clusters with different colors
+#print(cluster_data)
+color=['r','g','b']
+figura = plt.figure(1)
+for i in range(3):
+    xx = cluster_data.loc[cluster_data['label']==i] 
+    plt.plot(xx["longitude"],xx["latitude"],'.',c=color[i])
+    
+# In[]: Convex Hull of a cluster
+xx = cluster_data.loc[cluster_data['label']==1]
+yy = np.column_stack([xx["longitude" ],xx["latitude"]])
+
+hull = ConvexHull(yy)       
+plt.plot(yy[:,0],yy[:,1],'.')
+
+for index in hull.vertices:
+    print(hull.points[index])
+
+for simplex in hull.simplices:
+    plt.plot(yy[simplex, 0], yy[simplex, 1], 'k-')
+    
+# In[]: Plot map
 
 # Boundaries of the map
 bound_padding = 0.5

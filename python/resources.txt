@@ -1,3 +1,16 @@
+# Packages used
+# Anaconda
+https://www.anaconda.com/products/distribution
+
+# Pandas
+
+# Scikit-learn: https://scikit-learn.org/stable/install.html
+conda create -n sklearn-env -c conda-forge scikit-learn
+conda activate sklearn-env
+
+# Spyder (MATLAB-like editor): https://www.spyder-ide.org/
+conda install spyder
+
 # For maps data such as political, cultural borders etc
 https://www.naturalearthdata.com/
 https://github.com/nvkelso/natural-earth-vector
